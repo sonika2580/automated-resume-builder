@@ -12,7 +12,7 @@ cp ../.env.example ../.env   # then fill in real values
 uvicorn app.main:app --reload
 ```
 
-Visit `http://localhost:8000/health` — you should see `{"status": "ok", "billing_enabled": false}`.
+Visit `http://localhost:8000/api/health` — you should see `{"status": "ok", "billing_enabled": false}`.
 Interactive API docs are at `http://localhost:8000/docs` (FastAPI generates these automatically).
 
 ## Run tests
