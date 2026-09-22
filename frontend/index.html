@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume, built in minutes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF7F0;
+    --paper-raised: #FFFFFF;
+    --ink: #242220;
+    --ink-soft: #625D53;
+    --ink-faint: #948E80;
+    --accent: #2F6F5E;
+    --accent-ink: #1C4A3D;
+    --accent-soft: #E3EEE8;
+    --rule: #DCD5C3;
+    --rule-soft: #EAE5D6;
+    --danger: #8B3A3A;
+    --danger-soft: #F3E4E1;
+    --shadow: rgba(36, 34, 32, 0.14);
+    --workshop-bg: #F1EDE2;
+    --focus: #2F6F5E;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #FAF7F0;
+      --paper-raised: #FFFFFF;
+      --ink: #242220;
+      --ink-soft: #625D53;
+      --ink-faint: #948E80;
+      --accent: #4C9E86;
+      --accent-ink: #1C4A3D;
+      --accent-soft: #E3EEE8;
+      --rule: #DCD5C3;
+      --rule-soft: #EAE5D6;
+      --danger: #C4645C;
+      --danger-soft: #F3E4E1;
+      --shadow: rgba(0,0,0,0.4);
+      --workshop-bg: #1B1A17;
+      --page-bg: #121110;
+      --panel-bg: #201F1B;
+      --panel-border: #37352E;
+      --field-bg: #17160F0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #FAF7F0;
+    --paper-raised: #FFFFFF;
+    --ink: #242220;
+    --ink-soft: #625D53;
+    --ink-faint: #948E80;
+    --accent: #4C9E86;
+    --accent-ink: #1C4A3D;
+    --accent-soft: #E3EEE8;
+    --rule: #DCD5C3;
+    --rule-soft: #EAE5D6;
+    --danger: #C4645C;
+    --danger-soft: #F3E4E1;
+    --shadow: rgba(0,0,0,0.4);
+    --workshop-bg: #1B1A17;
+    --page-bg: #121110;
+    --panel-bg: #201F1B;
+    --panel-border: #37352E;
+    --field-bg: #17160F0;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--page-bg, var(--workshop-bg));
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  body { min-height: 100vh; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px clamp(16px, 3vw, 32px);
+    border-bottom: 1px solid var(--panel-border, var(--rule));
+    background: var(--panel-bg, var(--paper-raised));
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .brand {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+  .brand .mark {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.2px;
+  }
+  .brand .mark em { color: var(--accent); font-style: normal; }
+  .brand .sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+  .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 9px 14px;
+    border-radius: 7px;
+    border: 1px solid var(--panel-border, var(--rule));
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--rule-soft); }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #FBFAF6;
+  }
+  .btn-primary:hover { background: var(--accent-ink); border-color: var(--accent-ink); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--ink-soft); }
+  .btn-ghost:hover { background: var(--rule-soft); color: var(--ink); }
+  .btn svg { width: 15px; height: 15px; flex: none; }
+
+  .mobile-tabs {
+    display: none;
+    gap: 6px;
+    padding: 10px clamp(16px, 3vw, 32px) 0;
+    background: var(--panel-bg, var(--paper-raised));
+  }
+  .mobile-tabs button {
+    flex: 1;
+    padding: 9px 0;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid var(--panel-border, var(--rule));
+    border-bottom: none;
+    background: var(--workshop-bg);
+    color: var(--ink-soft);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+  }
+  .mobile-tabs button[aria-selected="true"] {
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  /* ---------- Layout ---------- */
+  .workspace {
+    display: grid;
+    grid-template-columns: minmax(340px, 420px) 1fr;
+    align-items: start;
+  }
+  .panel {
+    background: var(--panel-bg, var(--paper-raised));
+    border-right: 1px solid var(--panel-border, var(--rule));
+    height: calc(100vh - 61px);
+    overflow-y: auto;
+    padding: 20px clamp(16px, 2.4vw, 26px) 80px;
+  }
+  .stage {
+    height: calc(100vh - 61px);
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    padding: 34px 24px 80px;
+  }
+
+  /* ---------- Form ---------- */
+  .field-group { margin-bottom: 22px; }
+  .field-group + .field-group { border-top: 1px solid var(--rule-soft); padding-top: 18px; }
+  .group-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .group-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .group-hint { font-size: 11.5px; color: var(--ink-faint); margin-top: 1px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .field { margin-bottom: 8px; }
+  .field label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  input[type=text], input[type=email], input[type=tel], input[type=url], input[type=month], textarea {
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: var(--ink);
+    background: var(--field-bg, #FFFFFF);
+    border: 1px solid var(--panel-border, var(--rule));
+    border-radius: 6px;
+    padding: 8px 10px;
+    resize: vertical;
+  }
+  textarea { min-height: 64px; line-height: 1.45; font-family: 'Inter', sans-serif; }
+  input:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+    border-color: var(--focus);
+  }
+  .checkline { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
+  .checkline input { width: auto; }
+
+  .entry-card {
+    border: 1px solid var(--panel-border, var(--rule));
+    border-radius: 9px;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: var(--paper);
+  }
+  .entry-card .row { margin-bottom: 8px; }
+  .entry-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .entry-num { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 0.3px; }
+  .icon-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-faint); padding: 3px; border-radius: 5px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .icon-btn:hover { color: var(--danger); background: var(--danger-soft); }
+  .icon-btn svg { width: 15px; height: 15px; }
+
+  .add-btn {
+    width: 100%;
+    padding: 9px;
+    border: 1px dashed var(--panel-border, var(--ink-faint));
+    border-radius: 8px;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 12.5px;
+    cursor: pointer;
+  }
+  .add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+  .chip-input { display: flex; flex-wrap: wrap; gap: 6px; padding: 7px; border: 1px solid var(--panel-border, var(--rule)); border-radius: 7px; background: var(--field-bg, #fff); }
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--accent-soft); color: var(--accent-ink);
+    font-size: 12px; font-weight: 600;
+    padding: 4px 4px 4px 9px; border-radius: 20px;
+  }
+  .chip button { border: none; background: none; cursor: pointer; color: var(--accent-ink); opacity: 0.65; padding: 2px; display: flex; }
+  .chip button:hover { opacity: 1; }
+  .chip-input input { flex: 1; min-width: 100px; border: none; outline: none; padding: 4px; background: transparent; font-size: 13px; }
+
+  .link-row { display: flex; gap: 6px; margin-bottom: 6px; }
+  .link-row input { flex: 1; }
+
+  /* ---------- Resume paper ---------- */
+  .paper {
+    width: 100%;
+    max-width: 760px;
+    background: var(--paper-raised);
+    color: #232220;
+    box-shadow: 0 1px 2px var(--shadow), 0 18px 40px -18px var(--shadow);
+    padding: 56px 58px;
+    min-height: 1000px;
+    font-family: 'Source Serif 4', serif;
+  }
+  .r-name {
+    font-family: 'Fraunces', serif;
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    color: #201E1B;
+  }
+  .r-role { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: #2F6F5E; margin-top: 4px; letter-spacing: 0.2px; }
+  .r-contact {
+    margin-top: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #625D53;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+  }
+  .r-contact span { white-space: nowrap; }
+  .r-hr { border: none; border-top: 1.5px solid #201E1B; margin: 18px 0 20px; }
+  .r-section { margin-bottom: 20px; }
+  .r-section:last-child { margin-bottom: 0; }
+  .r-h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: #2F6F5E;
+    margin: 0 0 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #DCD5C3;
+  }
+  .r-summary { font-size: 14px; line-height: 1.6; color: #3A3733; }
+  .r-item { margin-bottom: 14px; }
+  .r-item:last-child { margin-bottom: 0; }
+  .r-item-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .r-item-title { font-size: 14.5px; font-weight: 600; color: #201E1B; }
+  .r-item-org { font-family: 'Inter', sans-serif; font-size: 12.5px; color: #2F6F5E; font-weight: 600; margin-top: 1px; }
+  .r-item-meta { font-family: 'Inter', sans-serif; font-size: 11.5px; color: #948E80; white-space: nowrap; text-align: right; flex: none; }
+  .r-item-sub { font-family: 'Inter', sans-serif; font-size: 11.5px; color: #948E80; margin-top: 1px; }
+  .r-bullets { margin: 7px 0 0; padding-left: 18px; }
+  .r-bullets li { font-size: 13.5px; line-height: 1.55; color: #3A3733; margin-bottom: 3px; }
+  .r-skills { display: flex; flex-wrap: wrap; gap: 7px 10px; }
+  .r-skill { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: #201E1B; background: #F1EDE2; padding: 4px 10px; border-radius: 4px; }
+  .r-empty { color: #B5AF9E; font-style: italic; font-size: 13px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    .workspace { grid-template-columns: 1fr; }
+    .mobile-tabs { display: flex; }
+    .panel, .stage { height: auto; min-height: auto; }
+    .panel { border-right: none; display: block; }
+    .stage { padding: 20px 14px 60px; }
+    .paper { padding: 34px 26px; }
+    body[data-view="preview"] .panel { display: none; }
+    body[data-view="edit"] .stage { display: none; }
+  }
+  @media (min-width: 861px) { .mobile-tabs { display: none !important; } }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--panel-border, var(--rule)); border-radius: 6px; }
+
+  /* ---------- Print ---------- */
+  @media print {
+    @page { size: letter; margin: 0.5in; }
+    .topbar, .mobile-tabs, .panel { display: none !important; }
+    .workspace { display: block; }
+    .stage { height: auto; padding: 0; display: block; }
+    .paper { box-shadow: none; padding: 0; max-width: 100%; min-height: 0; }
+    body, html { background: #fff; }
+  }
+
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #201E1B; color: #FAF7F0; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 10px 18px; border-radius: 8px; opacity: 0; pointer-events: none; transition: all 0.25s ease; z-index: 50;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ---------- Modal (resume checker) ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(20, 19, 16, 0.55);
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 6vh 16px; z-index: 60; overflow-y: auto;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-card {
+    background: var(--panel-bg, var(--paper-raised));
+    border: 1px solid var(--panel-border, var(--rule));
+    border-radius: 12px;
+    width: 100%; max-width: 560px;
+    padding: 24px 26px 26px;
+    box-shadow: 0 24px 60px -20px rgba(0,0,0,0.4);
+  }
+  .modal-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .modal-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--ink); }
+  .modal-sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+  .modal-close { background: none; border: none; cursor: pointer; color: var(--ink-faint); padding: 4px; }
+  .modal-close:hover { color: var(--ink); }
+  .modal-body { margin-top: 18px; }
+  .score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .score-badge {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 26px;
+    color: var(--accent); background: var(--accent-soft);
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex: none;
+  }
+  .score-label { font-size: 12.5px; color: var(--ink-soft); }
+  .checker-section { margin-bottom: 14px; }
+  .checker-section h4 { font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.4px; color: var(--ink-soft); margin: 0 0 6px; }
+  .checker-list { margin: 0; padding-left: 18px; }
+  .checker-list li { font-size: 13.5px; line-height: 1.55; color: var(--ink); margin-bottom: 4px; }
+  .checker-note { font-size: 13px; line-height: 1.55; color: var(--ink-soft); }
+  .checker-loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 30px 0 10px; color: var(--ink-soft); font-size: 13px; }
+  .spinner { width: 26px; height: 26px; border-radius: 50%; border: 3px solid var(--rule-soft); border-top-color: var(--accent); animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .suggestion-card {
+    border: 1px solid var(--panel-border, var(--rule));
+    border-radius: 9px;
+    padding: 11px 12px;
+    margin-bottom: 9px;
+    background: var(--paper);
+  }
+  .suggestion-head { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+  .suggestion-head input[type=checkbox] { margin-top: 3px; flex: none; width: 15px; height: 15px; accent-color: var(--accent); }
+  .suggestion-label { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12.5px; color: var(--ink); }
+  .suggestion-current { font-size: 12px; color: var(--ink-faint); margin-top: 6px; white-space: pre-wrap; text-decoration: line-through; opacity: 0.75; line-height: 1.5; }
+  .suggestion-proposed { font-size: 13px; color: var(--ink); margin-top: 6px; white-space: pre-wrap; line-height: 1.5; }
+  .suggestion-chip-row { margin-top: 6px; }
+  .checker-apply-btn { width: 100%; margin-top: 4px; }
+  .checker-hint { font-size: 12px; color: var(--ink-faint); margin: 2px 0 10px; }
+</style>
+</head>
+<body data-view="edit">
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">Resume<em>Craft</em></div>
+    <div class="sub">Fill it in on the left, watch it come together on the right.</div>
+  </div>
+  <div class="actions">
+    <input type="file" id="importInput" accept=".pdf,.docx,.txt" style="display:none">
+    <button class="btn btn-ghost" id="importBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Import resume
+    </button>
+    <button class="btn btn-ghost" id="checkBtn">Check my resume</button>
+    <button class="btn btn-ghost" id="sampleBtn">Load example</button>
+    <button class="btn btn-ghost" id="exportBtn">Export data</button>
+    <button class="btn btn-ghost" id="resetBtn">Start over</button>
+    <button class="btn btn-primary" id="printBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Save as PDF
+    </button>
+  </div>
+</div>
+
+<div class="mobile-tabs">
+  <button data-view-btn="edit" aria-selected="true">Edit</button>
+  <button data-view-btn="preview" aria-selected="false">Preview</button>
+</div>
+
+<div class="workspace">
+  <div class="panel" id="panel"></div>
+  <div class="stage">
+    <div class="paper" id="paper"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="checkerOverlay">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Resume check</div>
+        <div class="modal-sub">A quick read on how this resume comes across</div>
+      </div>
+      <button class="modal-close" id="checkerClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="checkerBody"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // Point this at your FastAPI backend. Override by setting window.DOLLARRESUME_API_BASE
+  // before this script runs (e.g. in a small inline <script> tag) if you deploy the
+  // frontend and backend on different origins.
+  var API_BASE = window.DOLLARRESUME_API_BASE || "http://localhost:8000/api";
+
+  var STORAGE_KEY = "resumecraft.draft.v1";
+
+  var blankState = function () {
+    return {
+      name: "", role: "", email: "", phone: "", location: "",
+      links: [],
+      summary: "",
+      experience: [],
+      education: [],
+      skills: [],
+      projects: [],
+      certifications: []
+    };
+  };
+
+  var sampleState = function () {
+    return {
+      name: "Jordan Ellis",
+      role: "Product Designer",
+      email: "jordan.ellis@email.com",
+      phone: "(612) 555-0148",
+      location: "Minneapolis, MN",
+      links: [
+        { label: "Portfolio", url: "jordanellis.design" },
+        { label: "LinkedIn", url: "linkedin.com/in/jordanellis" }
+      ],
+      summary: "Product designer with 6 years shaping B2B SaaS tools, from early research through shipped UI. I like turning messy workflows into interfaces people barely have to think about, and I care a lot about the handoff to engineering going smoothly.",
+      experience: [
+        {
+          company: "Northlight Software", role: "Senior Product Designer", location: "Minneapolis, MN",
+          start: "2022-03", end: "", current: true,
+          bullets: "Led redesign of the core reporting dashboard, cutting average task completion time by 34%\nBuilt and maintained the company's first shared design system, adopted across 4 product teams\nRan weekly usability sessions and turned findings into a prioritized backlog with engineering"
+        },
+        {
+          company: "Fieldstone Analytics", role: "Product Designer", location: "Remote",
+          start: "2019-06", end: "2022-02", current: false,
+          bullets: "Designed onboarding flow that raised trial-to-paid conversion from 11% to 19%\nPartnered with 3 engineers to ship a self-serve billing portal in one quarter\nMentored 2 junior designers through their first end-to-end feature launches"
+        }
+      ],
+      education: [
+        { school: "University of Minnesota", degree: "B.F.A. in Graphic Design", location: "Minneapolis, MN", start: "2015-09", end: "2019-05", details: "Minor in Human-Computer Interaction" }
+      ],
+      skills: ["Figma", "Design systems", "User research", "Prototyping", "HTML/CSS", "Accessibility", "Workshop facilitation"],
+      projects: [
+        { name: "Transit Buddy", description: "Side project mapping real-time bus delays for the Twin Cities; 2,000+ monthly users.", link: "transitbuddy.app" }
+      ],
+      certifications: [
+        { name: "Certified Usability Analyst", issuer: "Human Factors International", year: "2021" }
+      ]
+    };
+  };
+
+  var state = loadState();
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        return Object.assign(blankState(), parsed);
+      }
+    } catch (e) { /* storage unavailable or corrupt — fall through */ }
+    return blankState();
+  }
+
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    catch (e) { /* private browsing or quota — silently skip autosave */ }
+  }
+
+  function escapeHtml(str) {
+    return (str || "").replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function monthLabel(v) {
+    if (!v) return "";
+    var parts = v.split("-");
+    if (parts.length !== 2) return v;
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var idx = parseInt(parts[1], 10) - 1;
+    if (idx < 0 || idx > 11) return v;
+    return months[idx] + " " + parts[0];
+  }
+
+  function toast(msg) {
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { t.classList.remove("show"); }, 1900);
+  }
+
+  /* ---------------- FORM RENDERING ---------------- */
+
+  var panel = document.getElementById("panel");
+
+  function field(labelText, value, onInput, opts) {
+    opts = opts || {};
+    var wrap = document.createElement("div");
+    wrap.className = "field";
+    var label = document.createElement("label");
+    label.textContent = labelText;
+    wrap.appendChild(label);
+    var input;
+    if (opts.textarea) {
+      input = document.createElement("textarea");
+      if (opts.rows) input.rows = opts.rows;
+    } else {
+      input = document.createElement("input");
+      input.type = opts.type || "text";
+    }
+    input.value = value || "";
+    if (opts.placeholder) input.placeholder = opts.placeholder;
+    input.addEventListener("input", function () {
+      onInput(input.value);
+      renderPreview();
+      saveState();
+    });
+    wrap.appendChild(input);
+    return wrap;
+  }
+
+  function groupHead(title, hint) {
+    var head = document.createElement("div");
+    head.className = "group-head";
+    var left = document.createElement("div");
+    var t = document.createElement("div");
+    t.className = "group-title";
+    t.textContent = title;
+    left.appendChild(t);
+    if (hint) {
+      var h = document.createElement("div");
+      h.className = "group-hint";
+      h.textContent = hint;
+      left.appendChild(h);
+    }
+    head.appendChild(left);
+    return head;
+  }
+
+  function buildForm() {
+    panel.innerHTML = "";
+
+    /* --- Contact --- */
+    var g1 = document.createElement("div");
+    g1.className = "field-group";
+    g1.appendChild(groupHead("Header", "Your name and how to reach you"));
+    g1.appendChild(field("Full name", state.name, function (v) { state.name = v; }, { placeholder: "Jordan Ellis" }));
+    g1.appendChild(field("Role / title", state.role, function (v) { state.role = v; }, { placeholder: "Product Designer" }));
+    var r1 = document.createElement("div"); r1.className = "row";
+    r1.appendChild(field("Email", state.email, function (v) { state.email = v; }, { type: "email", placeholder: "you@email.com" }));
+    r1.appendChild(field("Phone", state.phone, function (v) { state.phone = v; }, { type: "tel", placeholder: "(555) 555-0100" }));
+    g1.appendChild(r1);
+    g1.appendChild(field("Location", state.location, function (v) { state.location = v; }, { placeholder: "Minneapolis, MN" }));
+
+    var linksWrap = document.createElement("div");
+    linksWrap.style.marginTop = "6px";
+    state.links.forEach(function (link, i) {
+      var row = document.createElement("div");
+      row.className = "link-row";
+      var labelInput = document.createElement("input");
+      labelInput.type = "text"; labelInput.placeholder = "Label (e.g. LinkedIn)"; labelInput.value = link.label;
+      labelInput.style.maxWidth = "38%";
+      labelInput.addEventListener("input", function () { state.links[i].label = labelInput.value; renderPreview(); saveState(); });
+      var urlInput = document.createElement("input");
+      urlInput.type = "text"; urlInput.placeholder = "url or handle"; urlInput.value = link.url;
+      urlInput.addEventListener("input", function () { state.links[i].url = urlInput.value; renderPreview(); saveState(); });
+      var rm = document.createElement("button");
+      rm.className = "icon-btn"; rm.type = "button"; rm.title = "Remove link";
+      rm.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+      rm.addEventListener("click", function () { state.links.splice(i, 1); buildForm(); renderPreview(); saveState(); });
+      row.appendChild(labelInput); row.appendChild(urlInput); row.appendChild(rm);
+      linksWrap.appendChild(row);
+    });
+    g1.appendChild(linksWrap);
+    var addLink = document.createElement("button");
+    addLink.className = "add-btn"; addLink.type = "button"; addLink.textContent = "+ Add link (portfolio, GitHub…)";
+    addLink.addEventListener("click", function () { state.links.push({ label: "", url: "" }); buildForm(); saveState(); });
+    g1.appendChild(addLink);
+    panel.appendChild(g1);
+
+    /* --- Summary --- */
+    var g2 = document.createElement("div");
+    g2.className = "field-group";
+    g2.appendChild(groupHead("Summary", "Two or three sentences on who you are"));
+    g2.appendChild(field("Summary", state.summary, function (v) { state.summary = v; }, { textarea: true, rows: 4, placeholder: "Product designer with 6 years shaping B2B SaaS tools…" }));
+    panel.appendChild(g2);
+
+    /* --- Experience --- */
+    var g3 = document.createElement("div");
+    g3.className = "field-group";
+    g3.appendChild(groupHead("Experience", "Most recent role first"));
+    state.experience.forEach(function (exp, i) {
+      g3.appendChild(experienceCard(exp, i));
+    });
+    var addExp = document.createElement("button");
+    addExp.className = "add-btn"; addExp.type = "button"; addExp.textContent = "+ Add position";
+    addExp.addEventListener("click", function () {
+      state.experience.push({ company: "", role: "", location: "", start: "", end: "", current: false, bullets: "" });
+      buildForm(); saveState();
+    });
+    g3.appendChild(addExp);
+    panel.appendChild(g3);
+
+    /* --- Education --- */
+    var g4 = document.createElement("div");
+    g4.className = "field-group";
+    g4.appendChild(groupHead("Education"));
+    state.education.forEach(function (ed, i) {
+      g4.appendChild(educationCard(ed, i));
+    });
+    var addEdu = document.createElement("button");
+    addEdu.className = "add-btn"; addEdu.type = "button"; addEdu.textContent = "+ Add school";
+    addEdu.addEventListener("click", function () {
+      state.education.push({ school: "", degree: "", location: "", start: "", end: "", details: "" });
+      buildForm(); saveState();
+    });
+    g4.appendChild(addEdu);
+    panel.appendChild(g4);
+
+    /* --- Skills --- */
+    var g5 = document.createElement("div");
+    g5.className = "field-group";
+    g5.appendChild(groupHead("Skills", "Press Enter or comma to add"));
+    g5.appendChild(skillsInput());
+    panel.appendChild(g5);
+
+    /* --- Projects --- */
+    var g6 = document.createElement("div");
+    g6.className = "field-group";
+    g6.appendChild(groupHead("Projects", "Optional"));
+    state.projects.forEach(function (p, i) {
+      g6.appendChild(projectCard(p, i));
+    });
+    var addProj = document.createElement("button");
+    addProj.className = "add-btn"; addProj.type = "button"; addProj.textContent = "+ Add project";
+    addProj.addEventListener("click", function () {
+      state.projects.push({ name: "", description: "", link: "" });
+      buildForm(); saveState();
+    });
+    g6.appendChild(addProj);
+    panel.appendChild(g6);
+
+    /* --- Certifications --- */
+    var g7 = document.createElement("div");
+    g7.className = "field-group";
+    g7.appendChild(groupHead("Certifications", "Optional"));
+    state.certifications.forEach(function (c, i) {
+      g7.appendChild(certCard(c, i));
+    });
+    var addCert = document.createElement("button");
+    addCert.className = "add-btn"; addCert.type = "button"; addCert.textContent = "+ Add certification";
+    addCert.addEventListener("click", function () {
+      state.certifications.push({ name: "", issuer: "", year: "" });
+      buildForm(); saveState();
+    });
+    g7.appendChild(addCert);
+    panel.appendChild(g7);
+  }
+
+  function cardShell(index, onRemove) {
+    var card = document.createElement("div");
+    card.className = "entry-card";
+    var top = document.createElement("div");
+    top.className = "entry-top";
+    var num = document.createElement("span");
+    num.className = "entry-num";
+    num.textContent = "#" + (index + 1);
+    var rm = document.createElement("button");
+    rm.className = "icon-btn"; rm.type = "button"; rm.title = "Remove";
+    rm.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+    rm.addEventListener("click", onRemove);
+    top.appendChild(num); top.appendChild(rm);
+    card.appendChild(top);
+    return card;
+  }
+
+  function miniField(labelText, value, onInput, opts) {
+    opts = opts || {};
+    var wrap = document.createElement("div");
+    var label = document.createElement("label");
+    label.textContent = labelText;
+    label.style.cssText = "display:block;font-size:11px;font-weight:600;color:var(--ink-soft);margin-bottom:3px;";
+    wrap.appendChild(label);
+    var input = document.createElement("input");
+    input.type = opts.type || "text";
+    input.value = value || "";
+    if (opts.placeholder) input.placeholder = opts.placeholder;
+    input.addEventListener("input", function () { onInput(input.value); renderPreview(); saveState(); });
+    wrap.appendChild(input);
+    return wrap;
+  }
+
+  function experienceCard(exp, i) {
+    var card = cardShell(i, function () { state.experience.splice(i, 1); buildForm(); renderPreview(); saveState(); });
+    var r1 = document.createElement("div"); r1.className = "row";
+    r1.appendChild(miniField("Company", exp.company, function (v) { exp.company = v; }, { placeholder: "Northlight Software" }));
+    r1.appendChild(miniField("Role", exp.role, function (v) { exp.role = v; }, { placeholder: "Senior Product Designer" }));
+    card.appendChild(r1);
+    var r2 = document.createElement("div"); r2.className = "row";
+    r2.appendChild(miniField("Location", exp.location, function (v) { exp.location = v; }, { placeholder: "Minneapolis, MN" }));
+    var dateWrap = document.createElement("div");
+    var dr = document.createElement("div"); dr.className = "row";
+    dr.appendChild(miniField("Start", exp.start, function (v) { exp.start = v; }, { type: "month" }));
+    dr.appendChild(miniField("End", exp.end, function (v) { exp.end = v; }, { type: "month" }));
+    dateWrap.appendChild(dr);
+    var check = document.createElement("div"); check.className = "checkline";
+    var cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!exp.current;
+    cb.addEventListener("change", function () { exp.current = cb.checked; renderPreview(); saveState(); });
+    var cl = document.createElement("label"); cl.textContent = "I currently work here";
+    check.appendChild(cb); check.appendChild(cl);
+    dateWrap.appendChild(check);
+    r2.appendChild(dateWrap);
+    card.appendChild(r2);
+    var bulletsField = document.createElement("div"); bulletsField.className = "field";
+    var bl = document.createElement("label"); bl.textContent = "Highlights (one per line)";
+    var bt = document.createElement("textarea"); bt.rows = 4; bt.value = exp.bullets || "";
+    bt.placeholder = "Led redesign of the core reporting dashboard…";
+    bt.addEventListener("input", function () { exp.bullets = bt.value; renderPreview(); saveState(); });
+    bulletsField.appendChild(bl); bulletsField.appendChild(bt);
+    card.appendChild(bulletsField);
+    return card;
+  }
+
+  function educationCard(ed, i) {
+    var card = cardShell(i, function () { state.education.splice(i, 1); buildForm(); renderPreview(); saveState(); });
+    card.appendChild(miniField("School", ed.school, function (v) { ed.school = v; }, { placeholder: "University of Minnesota" }));
+    var r1 = document.createElement("div"); r1.className = "row"; r1.style.marginTop = "8px";
+    r1.appendChild(miniField("Degree", ed.degree, function (v) { ed.degree = v; }, { placeholder: "B.F.A. in Graphic Design" }));
+    r1.appendChild(miniField("Location", ed.location, function (v) { ed.location = v; }, { placeholder: "Minneapolis, MN" }));
+    card.appendChild(r1);
+    var r2 = document.createElement("div"); r2.className = "row"; r2.style.marginTop = "8px";
+    r2.appendChild(miniField("Start", ed.start, function (v) { ed.start = v; }, { type: "month" }));
+    r2.appendChild(miniField("End", ed.end, function (v) { ed.end = v; }, { type: "month" }));
+    card.appendChild(r2);
+    var detailsField = document.createElement("div"); detailsField.className = "field"; detailsField.style.marginTop = "8px";
+    var dl = document.createElement("label"); dl.textContent = "Details (optional)";
+    var di = document.createElement("input"); di.type = "text"; di.value = ed.details || "";
+    di.placeholder = "Minor in Human-Computer Interaction";
+    di.addEventListener("input", function () { ed.details = di.value; renderPreview(); saveState(); });
+    detailsField.appendChild(dl); detailsField.appendChild(di);
+    card.appendChild(detailsField);
+    return card;
+  }
+
+  function projectCard(p, i) {
+    var card = cardShell(i, function () { state.projects.splice(i, 1); buildForm(); renderPreview(); saveState(); });
+    var r1 = document.createElement("div"); r1.className = "row";
+    r1.appendChild(miniField("Name", p.name, function (v) { p.name = v; }, { placeholder: "Transit Buddy" }));
+    r1.appendChild(miniField("Link (optional)", p.link, function (v) { p.link = v; }, { placeholder: "transitbuddy.app" }));
+    card.appendChild(r1);
+    var descField = document.createElement("div"); descField.className = "field"; descField.style.marginTop = "8px";
+    var dl = document.createElement("label"); dl.textContent = "Description";
+    var dt = document.createElement("textarea"); dt.rows = 2; dt.value = p.description || "";
+    dt.placeholder = "What it does and any numbers worth mentioning";
+    dt.addEventListener("input", function () { p.description = dt.value; renderPreview(); saveState(); });
+    descField.appendChild(dl); descField.appendChild(dt);
+    card.appendChild(descField);
+    return card;
+  }
+
+  function certCard(c, i) {
+    var card = cardShell(i, function () { state.certifications.splice(i, 1); buildForm(); renderPreview(); saveState(); });
+    card.appendChild(miniField("Name", c.name, function (v) { c.name = v; }, { placeholder: "Certified Usability Analyst" }));
+    var r1 = document.createElement("div"); r1.className = "row"; r1.style.marginTop = "8px";
+    r1.appendChild(miniField("Issuer", c.issuer, function (v) { c.issuer = v; }, { placeholder: "Human Factors International" }));
+    r1.appendChild(miniField("Year", c.year, function (v) { c.year = v; }, { placeholder: "2021" }));
+    card.appendChild(r1);
+    return card;
+  }
+
+  function skillsInput() {
+    var wrap = document.createElement("div");
+    wrap.className = "chip-input";
+    function redraw() {
+      wrap.innerHTML = "";
+      state.skills.forEach(function (skill, i) {
+        var chip = document.createElement("span");
+        chip.className = "chip";
+        var txt = document.createElement("span");
+        txt.textContent = skill;
+        var rm = document.createElement("button");
+        rm.type = "button";
+        rm.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+        rm.addEventListener("click", function () { state.skills.splice(i, 1); redraw(); renderPreview(); saveState(); });
+        chip.appendChild(txt); chip.appendChild(rm);
+        wrap.appendChild(chip);
+      });
+      var input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = state.skills.length ? "" : "Figma, User research, Prototyping…";
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === ",") {
+          e.preventDefault();
+          var v = input.value.trim().replace(/,$/, "");
+          if (v) { state.skills.push(v); redraw(); renderPreview(); saveState(); }
+          input.value = "";
+        } else if (e.key === "Backspace" && !input.value && state.skills.length) {
+          state.skills.pop(); redraw(); renderPreview(); saveState();
+        }
+      });
+      input.addEventListener("blur", function () {
+        var v = input.value.trim();
+        if (v) { state.skills.push(v); redraw(); renderPreview(); saveState(); input.value = ""; }
+      });
+      wrap.appendChild(input);
+    }
+    redraw();
+    return wrap;
+  }
+
+  /* ---------------- RESUME PREVIEW ---------------- */
+
+  var paper = document.getElementById("paper");
+
+  function dateRange(start, end, current) {
+    var s = monthLabel(start);
+    var e = current ? "Present" : monthLabel(end);
+    if (!s && !e) return "";
+    return [s, e].filter(Boolean).join(" \u2014 ");
+  }
+
+  function renderPreview() {
+    var hasName = state.name.trim().length > 0;
+    var html = "";
+
+    html += '<div class="r-name">' + (hasName ? escapeHtml(state.name) : '<span class="r-empty">Your name</span>') + '</div>';
+    if (state.role) html += '<div class="r-role">' + escapeHtml(state.role) + '</div>';
+
+    var contactBits = [];
+    if (state.location) contactBits.push(escapeHtml(state.location));
+    if (state.email) contactBits.push(escapeHtml(state.email));
+    if (state.phone) contactBits.push(escapeHtml(state.phone));
+    state.links.forEach(function (l) {
+      if (l.url) contactBits.push(escapeHtml(l.label ? l.label + ": " + l.url : l.url));
+    });
+    if (contactBits.length) {
+      html += '<div class="r-contact">' + contactBits.map(function (b) { return "<span>" + b + "</span>"; }).join("") + '</div>';
+    }
+    html += '<hr class="r-hr">';
+
+    if (state.summary) {
+      html += '<div class="r-section"><h2 class="r-h2">Summary</h2><p class="r-summary">' + escapeHtml(state.summary) + '</p></div>';
+    }
+
+    if (state.experience.length) {
+      html += '<div class="r-section"><h2 class="r-h2">Experience</h2>';
+      state.experience.forEach(function (exp) {
+        if (!exp.company && !exp.role) return;
+        html += '<div class="r-item">';
+        html += '<div class="r-item-top"><div><div class="r-item-title">' + escapeHtml(exp.role || "Role") + '</div>';
+        html += '<div class="r-item-org">' + escapeHtml(exp.company || "Company") + '</div></div>';
+        var meta = dateRange(exp.start, exp.end, exp.current);
+        html += '<div class="r-item-meta">' + (meta ? escapeHtml(meta) : "") + (exp.location ? '<div class="r-item-sub">' + escapeHtml(exp.location) + '</div>' : '') + '</div></div>';
+        var bullets = (exp.bullets || "").split("\n").map(function (b) { return b.trim(); }).filter(Boolean);
+        if (bullets.length) {
+          html += '<ul class="r-bullets">' + bullets.map(function (b) { return "<li>" + escapeHtml(b) + "</li>"; }).join("") + '</ul>';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    if (state.education.length) {
+      html += '<div class="r-section"><h2 class="r-h2">Education</h2>';
+      state.education.forEach(function (ed) {
+        if (!ed.school && !ed.degree) return;
+        html += '<div class="r-item">';
+        html += '<div class="r-item-top"><div><div class="r-item-title">' + escapeHtml(ed.school || "School") + '</div>';
+        html += '<div class="r-item-org">' + escapeHtml(ed.degree || "") + '</div></div>';
+        var meta = dateRange(ed.start, ed.end, false);
+        html += '<div class="r-item-meta">' + (meta ? escapeHtml(meta) : "") + (ed.location ? '<div class="r-item-sub">' + escapeHtml(ed.location) + '</div>' : '') + '</div></div>';
+        if (ed.details) html += '<div class="r-item-sub" style="margin-top:4px;">' + escapeHtml(ed.details) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    if (state.skills.length) {
+      html += '<div class="r-section"><h2 class="r-h2">Skills</h2><div class="r-skills">';
+      html += state.skills.map(function (s) { return '<span class="r-skill">' + escapeHtml(s) + '</span>'; }).join("");
+      html += '</div></div>';
+    }
+
+    if (state.projects.length) {
+      var validProjects = state.projects.filter(function (p) { return p.name; });
+      if (validProjects.length) {
+        html += '<div class="r-section"><h2 class="r-h2">Projects</h2>';
+        validProjects.forEach(function (p) {
+          html += '<div class="r-item"><div class="r-item-top"><div class="r-item-title">' + escapeHtml(p.name);
+          if (p.link) html += '<span class="r-item-sub" style="margin-left:8px;">' + escapeHtml(p.link) + '</span>';
+          html += '</div></div>';
+          if (p.description) html += '<div class="r-item-sub" style="font-size:13px;color:#3A3733;margin-top:3px;">' + escapeHtml(p.description) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+    }
+
+    if (state.certifications.length) {
+      var validCerts = state.certifications.filter(function (c) { return c.name; });
+      if (validCerts.length) {
+        html += '<div class="r-section"><h2 class="r-h2">Certifications</h2>';
+        validCerts.forEach(function (c) {
+          html += '<div class="r-item"><div class="r-item-top"><div class="r-item-title">' + escapeHtml(c.name) + '</div>';
+          html += '<div class="r-item-meta">' + escapeHtml(c.year || "") + '</div></div>';
+          if (c.issuer) html += '<div class="r-item-sub">' + escapeHtml(c.issuer) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+    }
+
+    paper.innerHTML = html;
+  }
+
+  /* ---------------- TOP ACTIONS ---------------- */
+
+  document.getElementById("printBtn").addEventListener("click", function () {
+    window.print();
+  });
+
+  document.getElementById("sampleBtn").addEventListener("click", function () {
+    state = sampleState();
+    buildForm(); renderPreview(); saveState();
+    toast("Example loaded");
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    if (confirm("Clear everything and start with a blank resume?")) {
+      state = blankState();
+      buildForm(); renderPreview(); saveState();
+      toast("Cleared");
+    }
+  });
+
+  function fallbackDownload(filename, text) {
+    try {
+      var blob = new Blob([text], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) { return false; }
+  }
+
+  document.getElementById("exportBtn").addEventListener("click", function () {
+    var filename = (state.name ? state.name.trim().replace(/\s+/g, "-").toLowerCase() : "resume") + "-data.json";
+    var text = JSON.stringify(state, null, 2);
+    if (fallbackDownload(filename, text)) {
+      toast("Data exported");
+    } else {
+      toast("Couldn't export — try again");
+    }
+  });
+
+  /* ---------------- IMPORT EXISTING RESUME ---------------- */
+
+  document.getElementById("importBtn").addEventListener("click", function () {
+    document.getElementById("importInput").click();
+  });
+
+  document.getElementById("importInput").addEventListener("change", async function (e) {
+    var file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    var name = file.name.toLowerCase();
+    if (!/\.(pdf|docx|txt)$/.test(name)) {
+      toast("Use a PDF, DOCX or TXT file");
+      return;
+    }
+    toast("Reading your resume\u2026 this can take a bit");
+    try {
+      var formData = new FormData();
+      formData.append("file", file);
+      var response = await fetch(API_BASE + "/import", { method: "POST", body: formData });
+      if (!response.ok) {
+        var errBody = await response.json().catch(function () { return {}; });
+        toast(errBody.detail || "Import didn't go through — try again");
+        return;
+      }
+      var parsed = await response.json();
+      mergeImported(parsed);
+      buildForm(); renderPreview(); saveState();
+      toast("Imported — review the details below before saving");
+    } catch (err) {
+      toast("Couldn't reach the server — is the backend running?");
+    }
+  });
+
+  function mergeImported(p) {
+    if (!p || typeof p !== "object") return;
+    ["name", "role", "email", "phone", "location", "summary"].forEach(function (k) {
+      if (p[k]) state[k] = p[k];
+    });
+    if (Array.isArray(p.links) && p.links.length) {
+      state.links = p.links.filter(function (l) { return l && (l.label || l.url); });
+    }
+    if (Array.isArray(p.experience) && p.experience.length) state.experience = p.experience;
+    if (Array.isArray(p.education) && p.education.length) state.education = p.education;
+    if (Array.isArray(p.skills) && p.skills.length) state.skills = p.skills;
+    if (Array.isArray(p.projects) && p.projects.length) {
+      state.projects = p.projects.filter(function (x) { return x && x.name; });
+    }
+    if (Array.isArray(p.certifications) && p.certifications.length) {
+      state.certifications = p.certifications.filter(function (x) { return x && x.name; });
+    }
+  }
+
+  /* ---------------- RESUME CHECKER ---------------- */
+
+  var checkerOverlay = document.getElementById("checkerOverlay");
+  var checkerBody = document.getElementById("checkerBody");
+
+  function openChecker() { checkerOverlay.classList.add("show"); }
+  function closeChecker() { checkerOverlay.classList.remove("show"); }
+  document.getElementById("checkerClose").addEventListener("click", closeChecker);
+  checkerOverlay.addEventListener("click", function (e) { if (e.target === checkerOverlay) closeChecker(); });
+
+  document.getElementById("checkBtn").addEventListener("click", async function () {
+    if (!state.name && !state.experience.length) {
+      toast("Add a few details first — there's not much to check yet");
+      return;
+    }
+    openChecker();
+    checkerBody.innerHTML = '<div class="checker-loading"><div class="spinner"></div>Reading through your resume\u2026</div>';
+    try {
+      var response = await fetch(API_BASE + "/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(state)
+      });
+      if (!response.ok) {
+        var errBody = await response.json().catch(function () { return {}; });
+        checkerBody.innerHTML = '<p class="checker-note">' + escapeHtml(errBody.detail || "Something went wrong running the check.") + '</p>';
+        return;
+      }
+      var result = await response.json();
+      renderChecker(result);
+    } catch (err) {
+      checkerBody.innerHTML = '<p class="checker-note">Couldn\u2019t reach the server \u2014 is the backend running?</p>';
+    }
+  });
+
+  var currentSuggestions = [];
+
+  function buildSuggestionsList(r) {
+    var list = [];
+    if (r.suggested_summary && r.suggested_summary.trim() && r.suggested_summary.trim() !== (state.summary || "").trim()) {
+      list.push({ type: "summary", label: "Summary", current: state.summary || "(empty)", suggested: r.suggested_summary.trim() });
+    }
+    if (Array.isArray(r.suggested_experience)) {
+      r.suggested_experience.forEach(function (item) {
+        if (!item || typeof item.index !== "number") return;
+        var exp = state.experience[item.index];
+        if (!exp) return;
+        var suggested = (item.bullets || "").trim();
+        if (!suggested || suggested === (exp.bullets || "").trim()) return;
+        list.push({
+          type: "experience_bullets", index: item.index,
+          label: (exp.role || "Role") + " at " + (exp.company || "Company") + " — highlights",
+          current: exp.bullets || "(empty)", suggested: suggested
+        });
+      });
+    }
+    if (Array.isArray(r.suggested_skills_add)) {
+      var existingLower = state.skills.map(function (s) { return s.toLowerCase(); });
+      r.suggested_skills_add.forEach(function (skill) {
+        if (!skill) return;
+        var s = String(skill).trim();
+        if (!s || existingLower.indexOf(s.toLowerCase()) !== -1) return;
+        list.push({ type: "skill_add", label: "Add to skills", suggested: s });
+      });
+    }
+    return list;
+  }
+
+  function suggestionCardHtml(s, i) {
+    var html = '<label class="suggestion-card suggestion-head">';
+    html += '<input type="checkbox" data-sidx="' + i + '" checked>';
+    html += '<div><div class="suggestion-label">' + escapeHtml(s.label) + '</div>';
+    if (s.type === "skill_add") {
+      html += '<div class="suggestion-chip-row"><span class="chip" style="cursor:default;"><span>' + escapeHtml(s.suggested) + '</span></span></div>';
+    } else {
+      html += '<div class="suggestion-current">' + escapeHtml(s.current) + '</div>';
+      html += '<div class="suggestion-proposed">' + escapeHtml(s.suggested) + '</div>';
+    }
+    html += '</div></label>';
+    return html;
+  }
+
+  function renderChecker(r) {
+    if (!r || typeof r.score !== "number") {
+      checkerBody.innerHTML = '<p class="checker-note">Couldn\u2019t make sense of the review. Try again in a moment.</p>';
+      return;
+    }
+    var html = '<div class="score-row"><div class="score-badge">' + Math.round(r.score) + '</div>' +
+      '<div class="score-label">out of 100 — how this resume is likely to land with a recruiter skimming it in under a minute.</div></div>';
+    if (Array.isArray(r.strengths) && r.strengths.length) {
+      html += '<div class="checker-section"><h4>What\u2019s working</h4><ul class="checker-list">' +
+        r.strengths.map(function (s) { return "<li>" + escapeHtml(s) + "</li>"; }).join("") + '</ul></div>';
+    }
+    if (Array.isArray(r.improvements) && r.improvements.length) {
+      html += '<div class="checker-section"><h4>Worth fixing</h4><ul class="checker-list">' +
+        r.improvements.map(function (s) { return "<li>" + escapeHtml(s) + "</li>"; }).join("") + '</ul></div>';
+    }
+    if (r.ats_notes) {
+      html += '<div class="checker-section"><h4>ATS &amp; formatting</h4><p class="checker-note">' + escapeHtml(r.ats_notes) + '</p></div>';
+    }
+
+    currentSuggestions = buildSuggestionsList(r);
+    if (currentSuggestions.length) {
+      html += '<div class="checker-section"><h4>Suggested edits</h4>';
+      html += '<p class="checker-hint">Nothing changes until you approve — review each one, untick anything you don\u2019t want, then apply.</p>';
+      html += currentSuggestions.map(suggestionCardHtml).join("");
+      html += '<button class="btn btn-primary checker-apply-btn" id="applySuggestionsBtn">Apply approved changes</button>';
+      html += '</div>';
+    }
+
+    checkerBody.innerHTML = html;
+    if (currentSuggestions.length) {
+      document.getElementById("applySuggestionsBtn").addEventListener("click", applyApprovedSuggestions);
+    }
+  }
+
+  function applyApprovedSuggestions() {
+    var boxes = checkerBody.querySelectorAll("input[data-sidx]");
+    var count = 0;
+    boxes.forEach(function (box) {
+      if (!box.checked) return;
+      var s = currentSuggestions[parseInt(box.getAttribute("data-sidx"), 10)];
+      if (!s) return;
+      if (s.type === "summary") {
+        state.summary = s.suggested; count++;
+      } else if (s.type === "experience_bullets") {
+        if (state.experience[s.index]) { state.experience[s.index].bullets = s.suggested; count++; }
+      } else if (s.type === "skill_add") {
+        var exists = state.skills.some(function (sk) { return sk.toLowerCase() === s.suggested.toLowerCase(); });
+        if (!exists) { state.skills.push(s.suggested); count++; }
+      }
+    });
+    if (count) {
+      buildForm(); renderPreview(); saveState();
+      toast(count + (count === 1 ? " change applied" : " changes applied"));
+      closeChecker();
+    } else {
+      toast("Nothing selected to apply");
+    }
+  }
+
+  /* Mobile tab switching */
+  document.querySelectorAll("[data-view-btn]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var view = btn.getAttribute("data-view-btn");
+      document.body.setAttribute("data-view", view);
+      document.querySelectorAll("[data-view-btn]").forEach(function (b) {
+        b.setAttribute("aria-selected", b === btn ? "true" : "false");
+      });
+    });
+  });
+
+  buildForm();
+  renderPreview();
+})();
+</script>
+</body>
+</html>

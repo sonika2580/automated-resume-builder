@@ -1,0 +1,21 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Node (if the frontend ever grows a build step)
+node_modules/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
